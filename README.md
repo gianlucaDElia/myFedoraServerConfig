@@ -52,9 +52,9 @@ sudo systemctl restart smb
 ## Port forewarding
 General Masquerade
 ```
-iptables -A FORWARD -o virbr1 -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i virbr1 -o eth0 -j ACCEPT
-iptables -A FORWARD -i virbr1 -o lo -j ACCEPT
+iptables -A FORWARD -o virbr0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i virbr0 -o eno1 -j ACCEPT
+iptables -A FORWARD -i virbr0 -o lo -j ACCEPT
 ```
 Connections from outside
 ```
