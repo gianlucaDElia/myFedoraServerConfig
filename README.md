@@ -48,3 +48,26 @@ Restart the server
 ```
 sudo systemctl restart smb
 ```
+
+## Port forewarding
+General Masquerade
+```
+iptables -A FORWARD -o virbr1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i virbr1 -o eth0 -j ACCEPT
+iptables -A FORWARD -i virbr1 -o lo -j ACCEPT
+```
+Connections from outside
+```
+iptables -I FORWARD -o virbr0 -d  172.16.1.2 -j ACCEPT
+iptables -t nat -I PREROUTING -p tcp --dport 10002 -j DNAT --to 172.16.1.2:3389
+```
+Masquerade local subnet
+```
+iptables -I FORWARD -o virbr0 -d 172.16.1.2 -j ACCEPT
+iptables -t nat -A POSTROUTING -s 172.16.1.1/24 -j MASQUERADE
+```
+Restart service
+```
+service netfilter-persistent save
+service netfilter-persistent reload
+```
